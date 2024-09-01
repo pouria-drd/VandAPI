@@ -17,6 +17,8 @@ urlpatterns = [
     path("", include(router.urls)),
     # main admin panel
     path("admin/", admin.site.urls),
+    # apps
+    path("api/v1/", include("shop.api.v1.urls")),
     # auth
     # path("api-auth/", include("rest_framework.urls")),
     # path("auth/token/", MyTokenObtainPairView.as_view(), name="token_obtain_pair"),
