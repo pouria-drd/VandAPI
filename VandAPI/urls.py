@@ -1,4 +1,4 @@
-from rest_framework import routers
+from rest_framework import routers, viewsets
 
 from django.contrib import admin
 from django.conf import settings
@@ -6,10 +6,27 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.views.generic.base import RedirectView
 
+from shop.models.product_model import Product
+from shop.serializers.product_serializer import ProductSerializer
+from shop.models.category_model import Category
+from shop.serializers.category_serializer import CategorySerializer
+
 # from users.views import MyTokenObtainPairView, MyTokenRefreshView
 
 
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
 router = routers.DefaultRouter()
+router.register(r"categories", CategoryViewSet)
+router.register(r"products", ProductViewSet)
 
 favicon_view = RedirectView.as_view(url="/static/images/favicon.ico", permanent=True)
 

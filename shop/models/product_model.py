@@ -28,12 +28,3 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
-
-    @property
-    def price(self):
-        """Get the most recent price amount for this product."""
-        # Cache the query to avoid multiple calls
-        price = self.prices.order_by("-created_at").first()
-        if price and price.is_active:
-            return float(price.amount)
-        return 0

@@ -1,5 +1,5 @@
 from shop.models import Category
-from shop.serializers import CategorySerializer
+from shop.serializers import CategorySerializer, CategoryDetailSerializer
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 
@@ -11,4 +11,4 @@ class CategoryListView(ListCreateAPIView):
 class CategoryDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = "slug"
     queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+    serializer_class = CategoryDetailSerializer

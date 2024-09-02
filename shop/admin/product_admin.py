@@ -1,6 +1,5 @@
 from django.contrib import admin
 from shop.models import Product, Price
-from django.utils.html import format_html
 
 
 class PriceInline(admin.TabularInline):
@@ -15,11 +14,11 @@ class PriceInline(admin.TabularInline):
 class ProductAdmin(admin.ModelAdmin):
     inlines = [PriceInline]
     prepopulated_fields = {"slug": ("name",)}
+
     list_display = (
         "name",
         "slug",
         "category",
-        # "price_display",
         "is_active",
         "created_at",
         "updated_at",
@@ -29,12 +28,19 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ("name", "slug")
     list_filter = ("is_active", "category")
 
-    def price_display(self, obj):
-        """Display the main price for the product."""
-        price = obj.price
-        return format_html(
-            '<span style="color: #059669;">${}</span>',
-            price,
-        )
+    actions = [
+        "activate_products",
+        "deactivate_products",
+    ]
 
-    price_display.short_description = "Final Price"
+    def activate_products(self, request, queryset):
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f"Successfully activated {updated} products.")
+
+    activate_products.short_description = "Activate selected products"
+
+    def deactivate_products(self, request, queryset):
+        updated = queryset.update(is_active=False)
+        self.message_user(request, f"Successfully deactivated {updated} products.")
+
+    deactivate_products.short_description = "Deactivate selected products"

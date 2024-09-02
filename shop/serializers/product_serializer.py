@@ -14,7 +14,6 @@ class ProductSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "slug",
-            "price",
             "category",
             "isActive",
             "updatedAt",
@@ -23,7 +22,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductDetailSerializer(serializers.ModelSerializer):
-    priceHistory = PriceSerializer(many=True, read_only=True)
+    prices = serializers.SerializerMethodField()
     isActive = serializers.BooleanField(source="is_active", default=True)
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)
     updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
@@ -34,10 +33,13 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "slug",
-            "price",
             "category",
             "isActive",
             "updatedAt",
             "createdAt",
-            "priceHistory",
+            "prices",
         ]
+
+    def get_products(self, obj):
+        prices = obj.prices.all()
+        return PriceSerializer(prices, many=True).data
