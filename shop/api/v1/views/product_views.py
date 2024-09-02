@@ -14,6 +14,7 @@ class ProductDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = "slug"
     queryset = Product.objects.all()
     serializer_class = ProductDetailSerializer
+    http_method_names = ["get", "patch", "delete"]
 
 
 class ProductViewSet(viewsets.ModelViewSet):

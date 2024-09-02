@@ -14,6 +14,7 @@ class CategoryDetailView(RetrieveUpdateDestroyAPIView):
     lookup_field = "slug"
     queryset = Category.objects.all()
     serializer_class = CategoryDetailSerializer
+    http_method_names = ["get", "patch", "delete"]
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
