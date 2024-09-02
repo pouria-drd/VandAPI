@@ -29,6 +29,10 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    def get_main_price(self):
+        """Get the most recent price for this product."""
+        return self.prices.order_by("-created_at").first()
+
 
 class Discount(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -41,8 +45,12 @@ class Discount(models.Model):
     )
 
     is_active = models.BooleanField(_("is active"), default=True)
-    start_date = models.DateTimeField(_("start date"), null=True, blank=True)
+
     end_date = models.DateTimeField(_("end date"), null=True, blank=True)
+    start_date = models.DateTimeField(_("start date"), null=True, blank=True)
+
+    updated_at = models.DateTimeField(_("updated at"), auto_now=True)
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
 
     def __str__(self):
         return self.name + " - " + self.discount_percentage
