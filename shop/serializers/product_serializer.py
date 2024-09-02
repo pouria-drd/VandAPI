@@ -40,6 +40,6 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             "prices",
         ]
 
-    def get_products(self, obj):
+    def get_prices(self, obj):
         prices = obj.prices.all()
         return PriceSerializer(prices, many=True).data
