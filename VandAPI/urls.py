@@ -6,6 +6,7 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.views.generic.base import RedirectView
 
+from shop.api.v1.views import PriceViewSet
 from shop.api.v1.views import ProductViewSet
 from shop.api.v1.views import CategoryViewSet
 
@@ -13,8 +14,10 @@ from shop.api.v1.views import CategoryViewSet
 
 
 router = routers.DefaultRouter()
-router.register(r"categories", CategoryViewSet)
+
+router.register(r"prices", PriceViewSet)
 router.register(r"products", ProductViewSet)
+router.register(r"categories", CategoryViewSet)
 
 favicon_view = RedirectView.as_view(url="/static/images/favicon.ico", permanent=True)
 
