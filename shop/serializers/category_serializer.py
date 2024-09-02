@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 
 from shop.models import Category
+from shop.serializers import ProductSerializer
 from shop.shop_settings import Category_ICON_MAX_SIZE as size_limit
 
 
@@ -11,6 +12,8 @@ class CategorySerializer(serializers.ModelSerializer):
     isActive = serializers.BooleanField(source="is_active", default=True)
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)
     updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
+
+    products = ProductSerializer(many=True, read_only=True)
 
     class Meta:
         model = Category
@@ -22,6 +25,7 @@ class CategorySerializer(serializers.ModelSerializer):
             "isActive",
             "createdAt",
             "updatedAt",
+            "products",
         ]
 
         read_only_fields = ["id", "updatedAt", "createdAt"]

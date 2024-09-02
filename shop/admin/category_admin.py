@@ -1,8 +1,15 @@
-from shop.models import Category
-from django.utils.html import format_html
-
 from django.contrib import admin
-from django.utils.translation import gettext_lazy as _
+from django.utils.html import format_html
+from shop.models import Category, Product
+
+
+class ProductInline(admin.TabularInline):
+    model = Product
+    extra = 1  # Number of empty forms to display
+    readonly_fields = ("created_at", "updated_at")
+    fields = ("name", "slug", "is_active", "created_at", "updated_at")
+    prepopulated_fields = {"slug": ("name",)}
+    can_delete = True
 
 
 @admin.register(Category)
@@ -19,8 +26,9 @@ class CategoryAdmin(admin.ModelAdmin):
     )
 
     search_fields = ("name", "slug")
-    list_filter = ("name", "slug", "is_active", "created_at", "updated_at")
+    list_filter = ("is_active", "created_at", "updated_at")
     readonly_fields = ["created_at", "updated_at"]
+    inlines = [ProductInline]
 
     def icon_display(self, obj):
         if obj.icon:
