@@ -8,7 +8,6 @@ class MenuSerializer(serializers.ModelSerializer):
     """
 
     icon = serializers.ImageField(read_only=True)
-    isActive = serializers.BooleanField(source="is_active", default=True)
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)
     updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
 
@@ -19,7 +18,6 @@ class MenuSerializer(serializers.ModelSerializer):
             "name",
             "slug",
             "icon",
-            "isActive",
             "createdAt",
             "updatedAt",
         ]
@@ -28,7 +26,6 @@ class MenuSerializer(serializers.ModelSerializer):
             "name",
             "slug",
             "icon",
-            "isActive",
             "createdAt",
             "updatedAt",
         ]
@@ -39,10 +36,9 @@ class MenuProductSerializer(serializers.ModelSerializer):
     Serializer for `Product` model to represent a product within a category in the menu.
     """
 
-    isActive = serializers.BooleanField(source="is_active", default=True)
+    price = serializers.SerializerMethodField(read_only=True)
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)
     updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
-    price = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Product
@@ -51,7 +47,6 @@ class MenuProductSerializer(serializers.ModelSerializer):
             "name",
             "slug",
             "price",
-            "isActive",
             "updatedAt",
             "createdAt",
         ]
@@ -60,7 +55,6 @@ class MenuProductSerializer(serializers.ModelSerializer):
             "name",
             "slug",
             "price",
-            "isActive",
             "updatedAt",
             "createdAt",
         ]
@@ -82,12 +76,10 @@ class MenuDetailSerializer(serializers.ModelSerializer):
     and its associated products.
     """
 
+    products = MenuProductSerializer(many=True, read_only=True)
     icon = serializers.ImageField(required=False, allow_null=True)
-    isActive = serializers.BooleanField(source="is_active", default=True)
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)
     updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
-
-    products = MenuProductSerializer(many=True, read_only=True)
 
     class Meta:
         model = Category
@@ -96,18 +88,16 @@ class MenuDetailSerializer(serializers.ModelSerializer):
             "name",
             "slug",
             "icon",
-            "isActive",
+            "products",
             "createdAt",
             "updatedAt",
-            "products",
         ]
         read_only_fields = [
             "id",
             "name",
             "slug",
             "icon",
-            "isActive",
+            "products",
             "createdAt",
             "updatedAt",
-            "products",
         ]
