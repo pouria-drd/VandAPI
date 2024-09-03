@@ -21,7 +21,7 @@ class Price(models.Model):
         verbose_name_plural = "prices"
         ordering = ["-created_at"]
         indexes = [
-            models.Index(fields=["amount", "is_active", "created_at"]),
+            models.Index(fields=["product", "is_active", "created_at"]),
         ]
 
     def __str__(self):

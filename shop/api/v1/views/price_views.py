@@ -8,12 +8,13 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 class PriceListView(ListCreateAPIView):
     queryset = Price.objects.all()
     serializer_class = PriceSerializer
+    http_method_names = ["get", "post"]
 
 
 class PriceDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Price.objects.all()
     serializer_class = PriceSerializer
-    http_method_names = ["get", "patch", "delete"]
+    http_method_names = ["get", "delete"]
 
 
 class PriceViewSet(viewsets.ModelViewSet):

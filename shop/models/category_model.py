@@ -13,7 +13,7 @@ from shop.shop_settings import Category_ICON_MAX_SIZE as size_limit
 
 def category_icon_upload_to(instance, filename):
     """Generate a unique upload path for category icons."""
-    return f"category_icons/{instance.slug}/{filename}"
+    return f"category_icons/{instance.id}/{filename}"
 
 
 @cleanup.select

@@ -1,11 +1,11 @@
-from rest_framework import routers, viewsets
+from rest_framework import routers
 
 from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include
 from django.conf.urls.static import static
-from django.views.generic.base import RedirectView
 
+from menu.api.v1.views import MenuViewSet
 from shop.api.v1.views import PriceViewSet
 from shop.api.v1.views import ProductViewSet
 from shop.api.v1.views import CategoryViewSet
@@ -15,11 +15,11 @@ from shop.api.v1.views import CategoryViewSet
 
 router = routers.DefaultRouter()
 
-router.register(r"prices", PriceViewSet)
-router.register(r"products", ProductViewSet)
-router.register(r"categories", CategoryViewSet)
+router.register(r"menu", MenuViewSet, basename="menu")
+router.register(r"prices", PriceViewSet, basename="price")
+router.register(r"products", ProductViewSet, basename="product")
+router.register(r"categories", CategoryViewSet, basename="category")
 
-favicon_view = RedirectView.as_view(url="/static/images/favicon.ico", permanent=True)
 
 urlpatterns = [
     path("", include(router.urls)),
@@ -27,13 +27,11 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # apps
     path("api/v1/", include("shop.api.v1.urls")),
+    path("api/v1/menu/", include("menu.api.v1.urls")),
     # auth
     # path("api-auth/", include("rest_framework.urls")),
     # path("auth/token/", MyTokenObtainPairView.as_view(), name="token_obtain_pair"),
     # path("auth/token/refresh/", MyTokenRefreshView.as_view(), name="token_refresh"),
-    # protected (only for menu owners)
-    # path("categories/", include("categories.urls")),
-    # path("categories/<uuid:category_id>/products/", include("products.urls")),
 ]
 
 if settings.DEBUG:

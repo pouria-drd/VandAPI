@@ -17,3 +17,4 @@ class PriceSerializer(serializers.ModelSerializer):
             "updatedAt",
             "createdAt",
         ]
+        read_only_fields = ["id", "createdAt", "updatedAt"]

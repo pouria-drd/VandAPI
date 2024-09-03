@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "django_cleanup.apps.CleanupSelectedConfig",
     # custom apps
+    "menu",
     "shop",
     "users",
 ]
