@@ -1,5 +1,5 @@
-from shop.models import Price
-from shop.serializers import PriceSerializer
+from panel.models import Price
+from panel.serializers import PriceSerializer
 
 from rest_framework import viewsets
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView

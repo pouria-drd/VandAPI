@@ -1,4 +1,4 @@
-from shop.models import Category, Price, Product
+from panel.models import Category, Price, Product
 from menu.serializers import MenuSerializer, MenuDetailSerializer
 
 from rest_framework.viewsets import ReadOnlyModelViewSet

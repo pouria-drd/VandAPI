@@ -1,5 +1,5 @@
-from shop.models import Category
-from shop.serializers import CategorySerializer, CategoryUpdateSerializer
+from panel.models import Category
+from panel.serializers import CategorySerializer, CategoryUpdateSerializer
 
 from rest_framework import viewsets
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView

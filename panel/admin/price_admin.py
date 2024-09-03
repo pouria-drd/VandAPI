@@ -1,4 +1,4 @@
-from shop.models import Price
+from panel.models import Price
 from django.contrib import admin
 
 

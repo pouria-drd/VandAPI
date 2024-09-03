@@ -1,5 +1,5 @@
-from shop.models import Product, Price
-from shop.serializers import ProductSerializer, ProductUpdateSerializer
+from panel.models import Product, Price
+from panel.serializers import ProductSerializer, ProductUpdateSerializer
 
 from rest_framework import viewsets
 from django.db.models import OuterRef, Subquery

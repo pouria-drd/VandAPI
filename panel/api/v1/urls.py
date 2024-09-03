@@ -1,8 +1,8 @@
 from django.urls import path
 
-from shop.api.v1.views import PriceListView, PriceDetailView
-from shop.api.v1.views import ProductListView, ProductDetailView
-from shop.api.v1.views import CategoryListCreateView, CategoryDetailUpdateView
+from panel.api.v1.views import PriceListView, PriceDetailView
+from panel.api.v1.views import ProductListView, ProductDetailView
+from panel.api.v1.views import CategoryListCreateView, CategoryDetailUpdateView
 
 urlpatterns = [
     # prices urls

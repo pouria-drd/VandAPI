@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     "django_cleanup.apps.CleanupSelectedConfig",
     # custom apps
     "menu",
-    "shop",
+    "panel",
     "users",
 ]
 

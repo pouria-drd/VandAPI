@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from shop.models import Category, Product
+from panel.models import Category, Product
 
 
 class ProductInline(admin.TabularInline):

@@ -6,9 +6,9 @@ from django.urls import path, include
 from django.conf.urls.static import static
 
 from menu.api.v1.views import MenuViewSet
-from shop.api.v1.views import PriceViewSet
-from shop.api.v1.views import ProductViewSet
-from shop.api.v1.views import CategoryViewSet
+from panel.api.v1.views import PriceViewSet
+from panel.api.v1.views import ProductViewSet
+from panel.api.v1.views import CategoryViewSet
 
 # from users.views import MyTokenObtainPairView, MyTokenRefreshView
 
@@ -26,7 +26,7 @@ urlpatterns = [
     # main admin panel
     path("admin/", admin.site.urls),
     # apps
-    path("api/v1/", include("shop.api.v1.urls")),
+    path("api/v1/panel/", include("panel.api.v1.urls")),
     path("api/v1/menu/", include("menu.api.v1.urls")),
     # auth
     # path("api-auth/", include("rest_framework.urls")),

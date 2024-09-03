@@ -1,6 +1,6 @@
-from shop.models import Product
+from panel.models import Product
 from rest_framework import serializers
-from shop.serializers import PriceSerializer
+from panel.serializers import PriceSerializer
 
 
 class ProductSerializer(serializers.ModelSerializer):

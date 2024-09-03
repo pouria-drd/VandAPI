@@ -1,5 +1,5 @@
 from django.contrib import admin
-from shop.models import Product, Price
+from panel.models import Product, Price
 
 
 class PriceInline(admin.TabularInline):

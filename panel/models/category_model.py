@@ -8,7 +8,7 @@ from django.utils.text import slugify
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-from shop.shop_settings import Category_ICON_MAX_SIZE as size_limit
+from panel.panel_settings import Category_ICON_MAX_SIZE as size_limit
 
 
 def category_icon_upload_to(instance, filename):

@@ -1,9 +1,9 @@
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 
-from shop.models import Category
-from shop.serializers import ProductSerializer
-from shop.shop_settings import Category_ICON_MAX_SIZE as size_limit
+from panel.models import Category
+from panel.serializers import ProductSerializer
+from panel.panel_settings import Category_ICON_MAX_SIZE as size_limit
 
 
 class CategorySerializer(serializers.ModelSerializer):
