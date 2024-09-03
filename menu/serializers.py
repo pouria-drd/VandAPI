@@ -3,6 +3,10 @@ from shop.models import Category, Product
 
 
 class MenuSerializer(serializers.ModelSerializer):
+    """
+    Serializer for `Category` model to represent a category in the menu.
+    """
+
     icon = serializers.ImageField(read_only=True)
     isActive = serializers.BooleanField(source="is_active", default=True)
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)
@@ -19,7 +23,6 @@ class MenuSerializer(serializers.ModelSerializer):
             "createdAt",
             "updatedAt",
         ]
-
         read_only_fields = [
             "id",
             "name",
@@ -32,6 +35,10 @@ class MenuSerializer(serializers.ModelSerializer):
 
 
 class MenuProductSerializer(serializers.ModelSerializer):
+    """
+    Serializer for `Product` model to represent a product within a category in the menu.
+    """
+
     isActive = serializers.BooleanField(source="is_active", default=True)
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)
     updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
@@ -44,25 +51,24 @@ class MenuProductSerializer(serializers.ModelSerializer):
             "name",
             "slug",
             "price",
-            "category",
             "isActive",
             "updatedAt",
             "createdAt",
         ]
-
         read_only_fields = [
             "id",
             "name",
             "slug",
             "price",
-            "category",
             "isActive",
             "updatedAt",
             "createdAt",
         ]
 
     def get_price(self, obj):
-        # Return the annotated price for the active product
+        """
+        Returns the most recent active price for the given product.
+        """
         return (
             obj.most_recent_active_price
             if obj.most_recent_active_price is not None
@@ -71,6 +77,11 @@ class MenuProductSerializer(serializers.ModelSerializer):
 
 
 class MenuDetailSerializer(serializers.ModelSerializer):
+    """
+    Serializer for `Category` model that includes detailed information about the category
+    and its associated products.
+    """
+
     icon = serializers.ImageField(required=False, allow_null=True)
     isActive = serializers.BooleanField(source="is_active", default=True)
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)
@@ -90,7 +101,6 @@ class MenuDetailSerializer(serializers.ModelSerializer):
             "updatedAt",
             "products",
         ]
-
         read_only_fields = [
             "id",
             "name",
