@@ -2,7 +2,7 @@ from panel.models import Category
 from panel.serializers import CategorySerializer, CategoryUpdateSerializer
 
 from rest_framework import viewsets
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 
 class CategoryListCreateView(ListCreateAPIView):
@@ -24,22 +24,23 @@ class CategoryListCreateView(ListCreateAPIView):
     queryset = Category.objects.all()
 
 
-class CategoryDetailUpdateView(RetrieveUpdateAPIView):
+class CategoryDetailUpdateView(RetrieveUpdateDestroyAPIView):
     """
-    View for retrieving and updating a single `Category` instance.
+    View for retrieving, deleting and updating a single `Category` instance.
 
     This view supports GET requests to retrieve a category and PATCH requests
-    to update an existing category. It fetches related products and their prices
+    to update an existing category and DELETE requests to delete a category.
     to include in the serialized output. The serializer class is determined based
     on the request method.
 
     HTTP Methods:
     - GET: Retrieve details of a specific category.
     - PATCH: Update an existing category.
+    - DELETE: Delete a category.
     """
 
     lookup_field = "slug"
-    http_method_names = ["get", "patch"]
+    http_method_names = ["get", "patch", "delete"]
     # Fetch products and their prices for efficient querying
     queryset = Category.objects.prefetch_related("products__prices")
 
