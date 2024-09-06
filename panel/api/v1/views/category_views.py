@@ -21,7 +21,7 @@ class CategoryListCreateView(ListCreateAPIView):
     http_method_names = ["get", "post"]
     serializer_class = CategorySerializer
     # Fetch products and their prices for efficient querying
-    queryset = Category.objects.prefetch_related("products__prices")
+    queryset = Category.objects.all()
 
 
 class CategoryDetailUpdateView(RetrieveUpdateAPIView):
