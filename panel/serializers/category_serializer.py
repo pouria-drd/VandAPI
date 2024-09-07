@@ -1,4 +1,6 @@
+import base64
 from rest_framework import serializers
+from django.core.files.base import ContentFile
 from django.utils.translation import gettext_lazy as _
 
 from panel.models import Category
@@ -7,19 +9,19 @@ from panel.panel_settings import Category_ICON_MAX_SIZE as size_limit
 
 class CategorySerializer(serializers.ModelSerializer):
     """
-    Serializer for the `Category` model used for read operations.
-
-    This serializer includes fields for category details such as name, slug,
-    icon, and associated products. It also handles validation for the icon file
-    size.
+    Serializer for the Category model, used for creating and reading category instances.
     """
 
-    icon = serializers.ImageField(required=False, allow_null=True)
+    icon = serializers.CharField(required=False, allow_null=True)
     isActive = serializers.BooleanField(source="is_active", default=True)
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)
     updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
 
     class Meta:
+        """
+        Meta class to configure the serializer's model and fields.
+        """
+
         model = Category
         fields = [
             "id",
@@ -30,49 +32,60 @@ class CategorySerializer(serializers.ModelSerializer):
             "createdAt",
             "updatedAt",
         ]
-        read_only_fields = ["id", "updatedAt", "createdAt", "products"]
+        read_only_fields = [
+            "id",
+            "updatedAt",
+            "createdAt",
+            "products",
+        ]  # Read-only fields
 
     def validate_icon(self, value):
         """
-        Validate the size of the uploaded icon image.
-
-        Checks if the size of the uploaded icon exceeds the maximum allowed size
-        defined in the settings. If it does, a validation error is raised.
+        Validate the icon field to ensure it meets the size requirements.
 
         Args:
-            value: The uploaded image file.
+            value (str): Base64 encoded image string.
 
         Returns:
-            The validated image file.
+            ContentFile: Validated image file if valid.
 
         Raises:
-            serializers.ValidationError: If the image file is larger than the allowed size.
+            serializers.ValidationError: If the image file is too large.
         """
         if value:
-            if value.size > size_limit:
+            # Decode base64 string
+            format, imgstr = value.split(";base64,")
+            ext = format.split("/")[-1]  # Extract file extension
+            data = base64.b64decode(imgstr)  # Decode the image data
+            file = ContentFile(data, name=f"image.{ext}")  # Create a ContentFile object
+
+            # Validate the size
+            if file.size > size_limit:
                 raise serializers.ValidationError(
                     _(
                         f"Image file is too large (more than {size_limit / 1024 / 1024} MB) !"
                     )
                 )
+
+            return file
         return value
 
 
 class CategoryUpdateSerializer(serializers.ModelSerializer):
     """
-    Serializer for updating the `Category` model.
-
-    This serializer includes fields for category details such as name, slug,
-    and icon, but does not include associated products. It also handles validation
-    for the icon file size.
+    Serializer for updating the Category model, used for partial updates.
     """
 
-    icon = serializers.ImageField(required=False, allow_null=True)
+    icon = serializers.CharField(required=False, allow_null=True)
     isActive = serializers.BooleanField(source="is_active", default=True)
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)
     updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
 
     class Meta:
+        """
+        Meta class to configure the serializer's model and fields for updates.
+        """
+
         model = Category
         fields = [
             "id",
@@ -83,29 +96,35 @@ class CategoryUpdateSerializer(serializers.ModelSerializer):
             "createdAt",
             "updatedAt",
         ]
-        read_only_fields = ["id", "updatedAt", "createdAt"]
+        read_only_fields = ["id", "updatedAt", "createdAt"]  # Read-only fields
 
     def validate_icon(self, value):
         """
-        Validate the size of the uploaded icon image for updates.
-
-        Checks if the size of the uploaded icon exceeds the maximum allowed size
-        defined in the settings. If it does, a validation error is raised.
+        Validate the icon field to ensure it meets the size requirements.
 
         Args:
-            value: The uploaded image file.
+            value (str): Base64 encoded image string.
 
         Returns:
-            The validated image file.
+            ContentFile: Validated image file if valid.
 
         Raises:
-            serializers.ValidationError: If the image file is larger than the allowed size.
+            serializers.ValidationError: If the image file is too large.
         """
         if value:
-            if value.size > size_limit:
+            # Decode base64 string
+            format, imgstr = value.split(";base64,")
+            ext = format.split("/")[-1]  # Extract file extension
+            data = base64.b64decode(imgstr)  # Decode the image data
+            file = ContentFile(data, name=f"image.{ext}")  # Create a ContentFile object
+
+            # Validate the size
+            if file.size > size_limit:
                 raise serializers.ValidationError(
                     _(
                         f"Image file is too large (more than {size_limit / 1024 / 1024} MB) !"
                     )
                 )
+
+            return file
         return value
