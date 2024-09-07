@@ -1,5 +1,7 @@
+import os
 import uuid
 from PIL import Image
+from dotenv import load_dotenv
 
 from django.db import models
 from django_cleanup import cleanup
@@ -9,6 +11,12 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from panel.panel_settings import Category_ICON_MAX_SIZE as size_limit
+
+load_dotenv()  # Loads the variables from the .env file into the environment
+
+
+# Load allowed extensions from environment variable
+ALLOWED_EXTENSIONS = os.getenv("ALLOWED_EXTENSIONS", "png,jpg,jpeg").split(",")
 
 
 def category_icon_upload_to(instance, filename):
@@ -44,9 +52,8 @@ class Category(models.Model):
 
         if self.icon:
             # Validate the image file type and size
-            valid_image_extensions = ["jpg", "jpeg", "png"]
             ext = self.icon.name.split(".")[-1].lower()
-            if ext not in valid_image_extensions:
+            if ext not in ALLOWED_EXTENSIONS:
                 raise ValidationError(
                     _(
                         "Unsupported file extension. Supported extensions are: jpg, jpeg, png!"

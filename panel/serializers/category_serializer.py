@@ -1,10 +1,18 @@
+import os
 import base64
+from dotenv import load_dotenv
+
 from rest_framework import serializers
 from django.core.files.base import ContentFile
 from django.utils.translation import gettext_lazy as _
 
 from panel.models import Category
 from panel.panel_settings import Category_ICON_MAX_SIZE as size_limit
+
+load_dotenv()  # Loads the variables from the .env file into the environment
+
+# Load allowed extensions from environment variable
+ALLOWED_EXTENSIONS = os.getenv("ALLOWED_EXTENSIONS", "png,jpg,jpeg").split(",")
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -41,7 +49,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def validate_icon(self, value):
         """
-        Validate the icon field to ensure it meets the size requirements.
+        Validate the icon field to ensure it meets the size and extension requirements.
 
         Args:
             value (str): Base64 encoded image string.
@@ -50,12 +58,20 @@ class CategorySerializer(serializers.ModelSerializer):
             ContentFile: Validated image file if valid.
 
         Raises:
-            serializers.ValidationError: If the image file is too large.
+            serializers.ValidationError: If the image file is too large or has an invalid extension.
         """
         if value:
             # Decode base64 string
             format, imgstr = value.split(";base64,")
             ext = format.split("/")[-1]  # Extract file extension
+            print(ALLOWED_EXTENSIONS)
+
+            # Validate file extension
+            if ext not in ALLOWED_EXTENSIONS:
+                raise serializers.ValidationError(
+                    _(f"Supported formats are: {', '.join(ALLOWED_EXTENSIONS)}.")
+                )
+
             data = base64.b64decode(imgstr)  # Decode the image data
             file = ContentFile(data, name=f"image.{ext}")  # Create a ContentFile object
 
@@ -100,7 +116,7 @@ class CategoryUpdateSerializer(serializers.ModelSerializer):
 
     def validate_icon(self, value):
         """
-        Validate the icon field to ensure it meets the size requirements.
+        Validate the icon field to ensure it meets the size and extension requirements.
 
         Args:
             value (str): Base64 encoded image string.
@@ -109,12 +125,19 @@ class CategoryUpdateSerializer(serializers.ModelSerializer):
             ContentFile: Validated image file if valid.
 
         Raises:
-            serializers.ValidationError: If the image file is too large.
+            serializers.ValidationError: If the image file is too large or has an invalid extension.
         """
         if value:
             # Decode base64 string
             format, imgstr = value.split(";base64,")
             ext = format.split("/")[-1]  # Extract file extension
+
+            # Validate file extension
+            if ext not in ALLOWED_EXTENSIONS:
+                raise serializers.ValidationError(
+                    _(f"Supported formats are: {', '.join(ALLOWED_EXTENSIONS)}.")
+                )
+
             data = base64.b64decode(imgstr)  # Decode the image data
             file = ContentFile(data, name=f"image.{ext}")  # Create a ContentFile object
 
