@@ -56,7 +56,8 @@ class ProductSerializer(serializers.ModelSerializer):
         product = Product.objects.create(**validated_data)
 
         # Create a new price if provided
-        if new_price:
+        if new_price is not None:
+            print(new_price)
             Price.objects.create(product=product, amount=new_price)
 
         return product
