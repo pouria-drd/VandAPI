@@ -93,6 +93,7 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
     Serializer for the Category model, used for creating and reading category instances.
     """
 
+    icon = serializers.ImageField()
     isActive = serializers.BooleanField(source="is_active", default=True)
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)
     updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
