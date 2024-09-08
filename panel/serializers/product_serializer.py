@@ -20,6 +20,8 @@ class ProductSerializer(serializers.ModelSerializer):
         max_digits=10, decimal_places=2, source="most_recent_price", read_only=True
     )
 
+    categoryName = serializers.CharField(source="category.name", read_only=True)
+
     class Meta:
         model = Product
         fields = [
@@ -28,6 +30,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "slug",
             "price",
             "category",
+            "categoryName",
             "isActive",
             "updatedAt",
             "createdAt",
@@ -39,6 +42,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "updatedAt",
             "createdAt",
             "prices",
+            "categoryName",
         ]
 
 
