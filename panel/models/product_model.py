@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     category = models.ForeignKey(
-        Category, on_delete=models.RESTRICT, related_name="products"
+        Category, on_delete=models.CASCADE, related_name="products"
     )
 
     name = models.CharField(_("name"), max_length=60)

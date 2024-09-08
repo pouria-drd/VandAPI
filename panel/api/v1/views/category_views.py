@@ -1,5 +1,5 @@
 from panel.models import Category
-from panel.serializers import CategorySerializer
+from panel.serializers import CategorySerializer, CategoryDetailSerializer
 
 from rest_framework import viewsets
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
@@ -39,9 +39,19 @@ class CategoryDetailUpdateView(RetrieveUpdateDestroyAPIView):
 
     lookup_field = "slug"
     http_method_names = ["get", "patch", "delete"]
-    serializer_class = CategorySerializer
     # Fetch products and their prices for efficient querying
     queryset = Category.objects.prefetch_related("products__prices")
+
+    def get_serializer_class(self):
+        """
+        Determine the serializer class based on the request method.
+        Returns:
+            CategorySerializer: For PATCH requests.
+            CategoryDetailSerializer: For GET requests.
+        """
+        if self.request.method == "PATCH":
+            return CategorySerializer
+        return CategoryDetailSerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

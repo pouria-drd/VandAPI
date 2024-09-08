@@ -7,6 +7,7 @@ from django.core.files.base import ContentFile
 from django.utils.translation import gettext_lazy as _
 
 from panel.models import Category
+from panel.serializers.product_serializer import ProductSerializer
 from panel.panel_settings import Category_ICON_MAX_SIZE as size_limit
 
 load_dotenv()  # Loads the variables from the .env file into the environment
@@ -85,3 +86,37 @@ class CategorySerializer(serializers.ModelSerializer):
 
             return file
         return value
+
+
+class CategoryDetailSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Category model, used for creating and reading category instances.
+    """
+
+    isActive = serializers.BooleanField(source="is_active", default=True)
+    createdAt = serializers.DateTimeField(source="created_at", read_only=True)
+    updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
+    products = ProductSerializer(many=True, read_only=True)
+
+    class Meta:
+        """
+        Meta class to configure the serializer's model and fields.
+        """
+
+        model = Category
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "icon",
+            "isActive",
+            "createdAt",
+            "updatedAt",
+            "products",
+        ]
+        read_only_fields = [
+            "id",
+            "updatedAt",
+            "createdAt",
+            "products",
+        ]  # Read-only fields
