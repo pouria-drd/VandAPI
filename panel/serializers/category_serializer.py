@@ -21,6 +21,38 @@ class CategorySerializer(serializers.ModelSerializer):
     Serializer for the Category model, used for creating and reading category instances.
     """
 
+    icon = serializers.ImageField()
+    isActive = serializers.BooleanField(source="is_active", default=True)
+    createdAt = serializers.DateTimeField(source="created_at", read_only=True)
+    updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
+
+    class Meta:
+        """
+        Meta class to configure the serializer's model and fields.
+        """
+
+        model = Category
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "icon",
+            "isActive",
+            "createdAt",
+            "updatedAt",
+        ]
+        read_only_fields = [
+            "id",
+            "updatedAt",
+            "createdAt",
+        ]  # Read-only fields
+
+
+class CategoryUpdateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Category model, used for creating and reading category instances.
+    """
+
     icon = serializers.CharField(required=False, allow_null=True)
     isActive = serializers.BooleanField(source="is_active", default=True)
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)

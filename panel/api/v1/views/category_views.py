@@ -1,5 +1,9 @@
 from panel.models import Category
-from panel.serializers import CategorySerializer, CategoryDetailSerializer
+from panel.serializers import (
+    CategorySerializer,
+    CategoryDetailSerializer,
+    CategoryUpdateSerializer,
+)
 
 from rest_framework import viewsets
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
@@ -50,7 +54,7 @@ class CategoryDetailUpdateView(RetrieveUpdateDestroyAPIView):
             CategoryDetailSerializer: For GET requests.
         """
         if self.request.method == "PATCH":
-            return CategorySerializer
+            return CategoryUpdateSerializer
         return CategoryDetailSerializer
 
 
