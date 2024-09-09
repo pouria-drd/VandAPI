@@ -2,7 +2,7 @@ from panel.models import Category
 from panel.serializers import (
     CategorySerializer,
     CategoryDetailSerializer,
-    CategoryUpdateSerializer,
+    CategoryCreateUpdateSerializer,
 )
 
 from rest_framework import viewsets
@@ -14,8 +14,7 @@ class CategoryListCreateView(ListCreateAPIView):
     View for listing and creating `Category` instances.
 
     This view supports GET requests to list all categories and POST requests
-    to create a new category. It fetches related products and their prices
-    to include in the serialized output.
+    to create a new category.
 
     HTTP Methods:
     - GET: List all categories.
@@ -23,9 +22,20 @@ class CategoryListCreateView(ListCreateAPIView):
     """
 
     http_method_names = ["get", "post"]
-    serializer_class = CategorySerializer
     # Fetch products and their prices for efficient querying
     queryset = Category.objects.all()
+
+    def get_serializer_class(self):
+        """
+        Determine the serializer class based on the request method.
+        Returns:
+            CategorySerializer: For GET requests.
+            CategoryCreateUpdateSerializer: For POST requests.
+        """
+        if self.request.method == "POST":
+            return CategoryCreateUpdateSerializer
+
+        return CategorySerializer
 
 
 class CategoryDetailUpdateView(RetrieveUpdateDestroyAPIView):
@@ -36,7 +46,7 @@ class CategoryDetailUpdateView(RetrieveUpdateDestroyAPIView):
     to update an existing category and DELETE requests to delete a category.
 
     HTTP Methods:
-    - GET: Retrieve details of a specific category.
+    - GET: Retrieve details of a specific category with its products.
     - PATCH: Update an existing category.
     - DELETE: Delete a category.
     """
@@ -54,7 +64,7 @@ class CategoryDetailUpdateView(RetrieveUpdateDestroyAPIView):
             CategoryDetailSerializer: For GET requests.
         """
         if self.request.method == "PATCH":
-            return CategoryUpdateSerializer
+            return CategoryCreateUpdateSerializer
         return CategoryDetailSerializer
 
 
