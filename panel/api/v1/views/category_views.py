@@ -1,4 +1,4 @@
-from panel.models import Category
+from panel.models import Category, Product, Price
 from panel.serializers import (
     CategorySerializer,
     CategoryDetailSerializer,
@@ -6,6 +6,7 @@ from panel.serializers import (
 )
 
 from rest_framework import viewsets
+from django.db.models import OuterRef, Subquery, Prefetch
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 
@@ -53,8 +54,6 @@ class CategoryDetailUpdateView(RetrieveUpdateDestroyAPIView):
 
     lookup_field = "slug"
     http_method_names = ["get", "patch", "delete"]
-    # Fetch products and their prices for efficient querying
-    queryset = Category.objects.prefetch_related("products__prices")
 
     def get_serializer_class(self):
         """
@@ -66,6 +65,20 @@ class CategoryDetailUpdateView(RetrieveUpdateDestroyAPIView):
         if self.request.method == "PATCH":
             return CategoryCreateUpdateSerializer
         return CategoryDetailSerializer
+
+    def get_queryset(self):
+        return Category.objects.prefetch_related(
+            Prefetch(
+                "products",
+                queryset=Product.objects.annotate(
+                    most_recent_active_price=Subquery(
+                        Price.objects.filter(product=OuterRef("pk"), is_active=True)
+                        .order_by("-created_at")
+                        .values("amount")[:1]
+                    )
+                ),
+            )
+        )
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
