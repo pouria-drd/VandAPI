@@ -22,7 +22,7 @@ router.register(r"categories", CategoryViewSet, basename="category")
 
 
 urlpatterns = [
-    path("", include(router.urls)),
+    path("api/", include(router.urls)),
     # main admin panel
     path("admin/", admin.site.urls),
     # apps

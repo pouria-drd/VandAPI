@@ -1,5 +1,5 @@
 from panel.models import Category, Product, Price
-from panel.serializers import (
+from panel.api.v1.serializers import (
     CategorySerializer,
     CategoryDetailSerializer,
     CategoryCreateUpdateSerializer,
