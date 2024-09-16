@@ -1,11 +1,12 @@
 from panel.models import Category, Product, Price
-from panel.api.v1.serializers import (
+from panel.v1.serializers import (
     CategorySerializer,
     CategoryDetailSerializer,
     CategoryCreateUpdateSerializer,
 )
 
 from rest_framework import viewsets
+from rest_framework.permissions import IsAdminUser
 from django.db.models import OuterRef, Subquery, Prefetch
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
@@ -22,9 +23,10 @@ class CategoryListCreateView(ListCreateAPIView):
     - POST: Create a new category.
     """
 
-    http_method_names = ["get", "post"]
     # Fetch products and their prices for efficient querying
     queryset = Category.objects.all()
+    permission_classes = [IsAdminUser]
+    http_method_names = ["get", "post"]
 
     def get_serializer_class(self):
         """
@@ -53,6 +55,7 @@ class CategoryDetailUpdateView(RetrieveUpdateDestroyAPIView):
     """
 
     lookup_field = "slug"
+    permission_classes = [IsAdminUser]
     http_method_names = ["get", "patch", "delete"]
 
     def get_serializer_class(self):
@@ -97,4 +100,5 @@ class CategoryViewSet(viewsets.ModelViewSet):
     """
 
     queryset = Category.objects.all()
+    permission_classes = [IsAdminUser]
     serializer_class = CategorySerializer

@@ -1,6 +1,7 @@
 from panel.models import Category, Price, Product
 from menu.serializers import MenuSerializer, MenuDetailSerializer
 
+from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from django.db.models import OuterRef, Subquery, BooleanField, Prefetch
@@ -16,6 +17,7 @@ class MenuListView(ListAPIView):
     """
 
     http_method_names = ["get"]
+    permission_classes = [AllowAny]
     serializer_class = MenuDetailSerializer
 
     def get_queryset(self):
@@ -74,6 +76,7 @@ class MenuDetailView(RetrieveAPIView):
 
     lookup_field = "slug"
     http_method_names = ["get"]
+    permission_classes = [AllowAny]
     serializer_class = MenuDetailSerializer
 
     def get_queryset(self):
@@ -126,5 +129,6 @@ class MenuViewSet(ReadOnlyModelViewSet):
     """
 
     http_method_names = ["get"]
+    permission_classes = [AllowAny]
     serializer_class = MenuSerializer
     queryset = Category.objects.filter(is_active=True)

@@ -1,5 +1,5 @@
 from django.urls import path
-from menu.api.v1.views import (
+from menu.v1.views import (
     MenuListView,
     MenuDetailView,
 )

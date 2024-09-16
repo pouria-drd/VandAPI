@@ -34,14 +34,6 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
 
 INTERNAL_IPS = os.getenv("INTERNAL_IPS", "127.0.0.1").split(",")
 
-CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
-
-
-# print(f"DEBUG {DEBUG}")
-# print(f"TIME_ZONE {TIME_ZONE}")
-# print(f"INTERNAL_IPS {INTERNAL_IPS}")
-# print(f"ALLOWED_HOSTS {ALLOWED_HOSTS}")
-# print(f"CORS_ALLOWED_ORIGINS {CORS_ALLOWED_ORIGINS}")
 
 AUTH_USER_MODEL = "users.User"
 
@@ -55,10 +47,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "rest_framework",
-    # "rest_framework_simplejwt",
+    "rest_framework_simplejwt",
     "debug_toolbar",
     "django_cleanup.apps.CleanupSelectedConfig",
     # custom apps
+    "otp",
     "menu",
     "panel",
     "users",
@@ -164,6 +157,32 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAdminUser",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        # "panel.v1.authentication.authenticate.CustomAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.UserRateThrottle",
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.ScopedRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "user": "20/minute",  # Limit logged-in users to 5 requests per minute
+        "anon": "10/minute",  # Limit anonymous users to 3 requests per minute
+        "panel_login": "5/minute",  # Limit to 5 login attempts per minute
+        "panel_verify_login": "3/minute",  # Limit to 10 OTP verifications per minute
+    },
+}
+
+CORS_ALLOW_CREDENTIALS = os.getenv("CORS_ALLOW_CREDENTIALS", "False") == "True"
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
+
+
 CORS_ALLOW_METHODS = [
     "DELETE",
     "GET",
@@ -173,22 +192,53 @@ CORS_ALLOW_METHODS = [
     "PUT",
 ]
 
-# REST_FRAMEWORK = {
-#     "DEFAULT_AUTHENTICATION_CLASSES": (
-#         "rest_framework_simplejwt.authentication.JWTAuthentication",
-#     )
-# }
-
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.BasicAuthentication",
-    ],
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(hours=24),
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "UPDATE_LAST_LOGIN": True,
+    # Cookie settings
+    # "AUTH_COOKIE": "access_token",  # Cookie name. Enables cookies if value is set.
+    # "AUTH_COOKIE_DOMAIN": None,  # A string like "example.com", or None for standard domain cookie.
+    # "AUTH_COOKIE_SECURE": False,  # Whether the auth cookies should be secure (https:// only).
+    # "AUTH_COOKIE_HTTP_ONLY": True,  # Http only cookie flag.It's not fetch by javascript.
+    # "AUTH_COOKIE_PATH": "/",  # The path of the auth cookie.
+    # "AUTH_COOKIE_SAMESITE": "Lax",  # Whether to set the flag restricting cookie leaks on cross-site requests.
+    # This can be 'Lax', 'Strict', or None to disable the flag.
 }
 
-# SIMPLE_JWT = {
-#     "ACCESS_TOKEN_LIFETIME": timedelta(seconds=3000),
-#     "REFRESH_TOKEN_LIFETIME": timedelta(seconds=6000),
-#     "AUTH_HEADER_TYPES": ("Bearer",),
-#     "UPDATE_LAST_LOGIN": True,
-# }
+
+EMAIL_BACKEND = os.getenv(
+    "EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend"
+)
+
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = os.getenv("EMAIL_PORT", 587)
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "False") == "True"
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+
+# Logging
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": "panel_login_activity.log",
+        },
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "panel_login_otp": {
+            "handlers": ["file", "console"],
+            "level": "INFO",
+            "propagate": True,
+        },
+    },
+}

@@ -1,5 +1,5 @@
 from panel.models import Product, Price
-from panel.api.v1.serializers import (
+from panel.v1.serializers import (
     ProductSerializer,
     ProductDetailSerializer,
     ProductUpdateCreateSerializer,
@@ -7,6 +7,7 @@ from panel.api.v1.serializers import (
 
 from rest_framework import viewsets
 from django.db.models import OuterRef, Subquery
+from rest_framework.permissions import IsAdminUser
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 
@@ -19,6 +20,7 @@ class ProductListView(ListCreateAPIView):
     - POST: Create a new product.
     """
 
+    permission_classes = [IsAdminUser]
     serializer_class = ProductSerializer
     http_method_names = ["get", "post"]
 
@@ -64,7 +66,9 @@ class ProductDetailView(RetrieveUpdateDestroyAPIView):
     - DELETE: Delete a product.
     """
 
-    lookup_field = "slug"  # Use slug to identify the product
+    # Use slug to identify the product
+    lookup_field = "slug"
+    permission_classes = [IsAdminUser]
     http_method_names = ["get", "patch", "delete"]
 
     def get_serializer_class(self):
@@ -103,4 +107,5 @@ class ProductViewSet(viewsets.ModelViewSet):
     """
 
     queryset = Product.objects.all()
+    permission_classes = [IsAdminUser]
     serializer_class = ProductDetailSerializer

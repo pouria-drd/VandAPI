@@ -3,6 +3,7 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Validator to ensure the username contains only lowercase letters, numbers, and underscores,
 # and is no longer than 25 characters.
@@ -51,3 +52,17 @@ class User(AbstractUser):
         Returns the username of the user.
         """
         return self.username
+
+    def generate_jwt_token(self):
+        """
+        Generate JWT tokens (access and refresh) and include additional data
+        in the payload (e.g., fullName, isAdmin).
+        """
+        token = RefreshToken.for_user(self)
+
+        # Add custom claims to the token
+        token["fullName"] = f"{self.first_name} {self.last_name}"
+        token["isAdmin"] = self.is_staff
+        token["email"] = self.email  # You can add more fields as needed
+
+        return token

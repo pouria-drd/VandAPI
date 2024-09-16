@@ -1,10 +1,26 @@
 from django.urls import path
+from rest_framework_simplejwt.views import TokenRefreshView
+from panel.v1.views import (
+    # login views
+    LoginView,
+    VerifyLoginView,
+    # prices views
+    PriceListView,
+    PriceDetailView,
+    # products views
+    ProductListView,
+    ProductDetailView,
+    # categories views
+    CategoryListCreateView,
+    CategoryDetailUpdateView,
+)
 
-from panel.api.v1.views import PriceListView, PriceDetailView
-from panel.api.v1.views import ProductListView, ProductDetailView
-from panel.api.v1.views import CategoryListCreateView, CategoryDetailUpdateView
 
 urlpatterns = [
+    # login urls
+    path("login/", LoginView.as_view(), name="panel-login"),
+    path("verify-login/", VerifyLoginView.as_view(), name="panel-verify-login"),
+    path("refresh/", TokenRefreshView.as_view(), name="panel-refresh"),
     # prices urls
     path("prices/", PriceListView.as_view(), name="price-list"),
     path("prices/<uuid:pk>/", PriceDetailView.as_view(), name="price-detail"),

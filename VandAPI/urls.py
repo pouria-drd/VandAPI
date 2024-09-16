@@ -5,12 +5,10 @@ from django.conf import settings
 from django.urls import path, include
 from django.conf.urls.static import static
 
-from menu.api.v1.views import MenuViewSet
-from panel.api.v1.views import PriceViewSet
-from panel.api.v1.views import ProductViewSet
-from panel.api.v1.views import CategoryViewSet
-
-# from users.views import MyTokenObtainPairView, MyTokenRefreshView
+from menu.v1.views import MenuViewSet
+from panel.v1.views import PriceViewSet
+from panel.v1.views import ProductViewSet
+from panel.v1.views import CategoryViewSet
 
 
 router = routers.DefaultRouter()
@@ -22,16 +20,12 @@ router.register(r"categories", CategoryViewSet, basename="category")
 
 
 urlpatterns = [
-    path("api/", include(router.urls)),
+    path("vand-api/", include(router.urls)),
     # main admin panel
     path("admin/", admin.site.urls),
     # apps
-    path("api/v1/panel/", include("panel.api.v1.urls")),
-    path("api/v1/menu/", include("menu.api.v1.urls")),
-    # auth
-    # path("api-auth/", include("rest_framework.urls")),
-    # path("auth/token/", MyTokenObtainPairView.as_view(), name="token_obtain_pair"),
-    # path("auth/token/refresh/", MyTokenRefreshView.as_view(), name="token_refresh"),
+    path("vand-api/menu/v1/", include("menu.v1.urls")),
+    path("vand-api/panel/v1/", include("panel.v1.urls")),
 ]
 
 if settings.DEBUG:

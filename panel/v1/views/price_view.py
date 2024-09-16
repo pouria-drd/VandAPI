@@ -1,7 +1,8 @@
 from panel.models import Price
-from panel.api.v1.serializers import PriceSerializer
+from panel.v1.serializers import PriceSerializer
 
 from rest_framework import viewsets
+from rest_framework.permissions import IsAdminUser
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 
@@ -19,6 +20,7 @@ class PriceListView(ListCreateAPIView):
 
     queryset = Price.objects.all()
     serializer_class = PriceSerializer
+    permission_classes = [IsAdminUser]
     http_method_names = ["get", "post"]
 
 
@@ -37,6 +39,7 @@ class PriceDetailView(RetrieveUpdateDestroyAPIView):
 
     queryset = Price.objects.all()
     serializer_class = PriceSerializer
+    permission_classes = [IsAdminUser]
     http_method_names = ["get", "delete"]
 
 
@@ -56,4 +59,5 @@ class PriceViewSet(viewsets.ModelViewSet):
     """
 
     queryset = Price.objects.all()
+    permission_classes = [IsAdminUser]
     serializer_class = PriceSerializer

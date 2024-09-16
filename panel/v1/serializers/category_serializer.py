@@ -7,7 +7,7 @@ from django.core.files.base import ContentFile
 from django.utils.translation import gettext_lazy as _
 
 from panel.models import Category
-from panel.api.v1.serializers import ProductSerializer
+from panel.v1.serializers import ProductSerializer
 from panel.panel_settings import Category_ICON_MAX_SIZE as size_limit
 
 load_dotenv()  # Loads the variables from the .env file into the environment
