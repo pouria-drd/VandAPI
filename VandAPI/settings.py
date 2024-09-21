@@ -52,9 +52,10 @@ INSTALLED_APPS = [
     "django_cleanup.apps.CleanupSelectedConfig",
     # custom apps
     "otp",
+    "mail",
     "menu",
-    "panel",
     "users",
+    "authentication",
 ]
 
 MIDDLEWARE = [
@@ -174,8 +175,8 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "user": "20/minute",  # Limit logged-in users to 5 requests per minute
         "anon": "10/minute",  # Limit anonymous users to 3 requests per minute
-        "panel_login": "5/minute",  # Limit to 5 login attempts per minute
-        "panel_verify_login": "3/minute",  # Limit to 10 OTP verifications per minute
+        "login_v1": "5/minute",  # Limit to 5 login attempts per minute
+        "verify_login_v1": "3/minute",  # Limit to 10 OTP verifications per minute
     },
 }
 
@@ -193,20 +194,17 @@ CORS_ALLOW_METHODS = [
 ]
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(hours=24),
+    "ACCESS_TOKEN_LIFETIME": timedelta(
+        minutes=int(os.getenv("ACCESS_TOKEN_LIFETIME", "15"))
+    ),
+    "REFRESH_TOKEN_LIFETIME": timedelta(
+        hours=int(os.getenv("REFRESH_TOKEN_LIFETIME", "24"))
+    ),
     "AUTH_HEADER_TYPES": ("Bearer",),
     "UPDATE_LAST_LOGIN": True,
-    # Cookie settings
-    # "AUTH_COOKIE": "access_token",  # Cookie name. Enables cookies if value is set.
-    # "AUTH_COOKIE_DOMAIN": None,  # A string like "example.com", or None for standard domain cookie.
-    # "AUTH_COOKIE_SECURE": False,  # Whether the auth cookies should be secure (https:// only).
-    # "AUTH_COOKIE_HTTP_ONLY": True,  # Http only cookie flag.It's not fetch by javascript.
-    # "AUTH_COOKIE_PATH": "/",  # The path of the auth cookie.
-    # "AUTH_COOKIE_SAMESITE": "Lax",  # Whether to set the flag restricting cookie leaks on cross-site requests.
-    # This can be 'Lax', 'Strict', or None to disable the flag.
+    # "ROTATE_REFRESH_TOKENS": True,
+    # "BLACKLIST_AFTER_ROTATION": True,
 }
-
 
 EMAIL_BACKEND = os.getenv(
     "EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend"
@@ -224,19 +222,33 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
-        "file": {
+        "login_file_v1": {
             "level": "INFO",
             "class": "logging.FileHandler",
-            "filename": "panel_login_activity.log",
+            "filename": "login_activity_v1.log",
         },
-        "console": {
+        "login_console_v1": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+        },
+        "email_file_v1": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": "email_activity_v1.log",
+        },
+        "email_console_v1": {
             "level": "INFO",
             "class": "logging.StreamHandler",
         },
     },
     "loggers": {
-        "panel_login_otp": {
-            "handlers": ["file", "console"],
+        "login_v1": {
+            "handlers": ["login_file_v1", "login_console_v1"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "email_v1": {
+            "handlers": ["email_file_v1", "email_console_v1"],
             "level": "INFO",
             "propagate": True,
         },

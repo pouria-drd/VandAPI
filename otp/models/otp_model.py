@@ -67,7 +67,6 @@ class OTP(models.Model):
     def check_otp(self, otp_code) -> bool:
         """Compare the OTP code with the stored OTP code."""
         result: bool = self.hash_otp(otp_code) == self.code
-        print(f"result: {result}")
         return result
 
     def save(self, *args, **kwargs):

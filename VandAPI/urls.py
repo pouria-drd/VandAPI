@@ -1,31 +1,23 @@
-from rest_framework import routers
-
 from django.contrib import admin
 from django.conf import settings
+from rest_framework import routers
 from django.urls import path, include
 from django.conf.urls.static import static
-
-from menu.v1.views import MenuViewSet
-from panel.v1.views import PriceViewSet
-from panel.v1.views import ProductViewSet
-from panel.v1.views import CategoryViewSet
 
 
 router = routers.DefaultRouter()
 
-router.register(r"menu", MenuViewSet, basename="menu")
-router.register(r"prices", PriceViewSet, basename="price")
-router.register(r"products", ProductViewSet, basename="product")
-router.register(r"categories", CategoryViewSet, basename="category")
 
+base_api: str = "vand-api/"
 
 urlpatterns = [
-    path("vand-api/", include(router.urls)),
-    # main admin panel
-    path("admin/", admin.site.urls),
-    # apps
-    path("vand-api/menu/v1/", include("menu.v1.urls")),
-    path("vand-api/panel/v1/", include("panel.v1.urls")),
+    path(base_api, include(router.urls)),
+    # main admin
+    path(base_api + "admin/", admin.site.urls),
+    # api version 1
+    path(base_api + "v1/menu/", include("menu.api.v1.urls")),
+    path(base_api + "v1/users/", include("users.api.v1.urls")),
+    path(base_api + "v1/authentication/", include("authentication.api.v1.urls")),
 ]
 
 if settings.DEBUG:
