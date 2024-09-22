@@ -12,9 +12,9 @@ from menu.api.v1.views import (
 
 urlpatterns = [
     # menu urls
-    path("", MenuListView.as_view(), name="menu-list-v1"),
+    path("menu-list/", MenuListView.as_view(), name="menu-list-v1"),
     path(
-        "<slug:slug>/",
+        "menu-list/<slug:slug>/",
         MenuDetailView.as_view(),
         name="menu-detail",
     ),
