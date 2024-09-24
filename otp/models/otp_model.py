@@ -7,12 +7,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-# Load environment variables from .env file
-import dotenv
-
-dotenv.load_dotenv()
-
-OTP_CODE_EXPIRE_TIME = int(os.getenv("OTP_CODE_EXPIRE_TIME", 5))
+OTP_CODE_EXPIRE_TIME = int(os.environ.get("OTP_CODE_EXPIRE_TIME", 5))
 
 
 def get_default_expires_at():

@@ -1,6 +1,5 @@
 import os
 import base64
-from dotenv import load_dotenv
 
 from rest_framework import serializers
 from django.core.files.base import ContentFile
@@ -10,10 +9,9 @@ from menu.models import Category
 from .product_serializer import ProductSerializer
 from menu.menu_settings import Category_ICON_MAX_SIZE as size_limit
 
-load_dotenv()  # Loads the variables from the .env file into the environment
 
 # Load allowed extensions from environment variable
-ALLOWED_EXTENSIONS = os.getenv("ALLOWED_EXTENSIONS", "png,jpg,jpeg").split(",")
+ALLOWED_EXTENSIONS = os.environ.get("ALLOWED_EXTENSIONS", "png,jpg,jpeg").split(",")
 
 
 class CategorySerializer(serializers.ModelSerializer):

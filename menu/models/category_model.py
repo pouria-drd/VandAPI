@@ -1,7 +1,6 @@
 import os
 import uuid
 from PIL import Image
-from dotenv import load_dotenv
 
 from django.db import models
 from django_cleanup import cleanup
@@ -12,11 +11,9 @@ from django.utils.translation import gettext_lazy as _
 
 from menu.menu_settings import Category_ICON_MAX_SIZE as size_limit
 
-load_dotenv()  # Loads the variables from the .env file into the environment
-
 
 # Load allowed extensions from environment variable
-ALLOWED_EXTENSIONS = os.getenv("ALLOWED_EXTENSIONS", "png,jpg,jpeg").split(",")
+ALLOWED_EXTENSIONS = os.environ.get("ALLOWED_EXTENSIONS", "png,jpg,jpeg").split(",")
 
 
 def category_icon_upload_to(instance, filename):
